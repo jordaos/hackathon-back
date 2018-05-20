@@ -2,6 +2,7 @@ package com.hackathon.service;
 
 import com.hackathon.entity.Equipe;
 import com.hackathon.entity.Hackathon;
+import com.hackathon.entity.Participante;
 
 import java.util.List;
 

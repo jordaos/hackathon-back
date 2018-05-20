@@ -30,6 +30,12 @@ public class HackathonServiceImpl implements HackathonService{
     }
 
     @Override
+    public Hackathon encerrar(Hackathon hackathon) {
+        hackathon.setEncerrado(true);
+        return repository.save(hackathon);
+    }
+
+    @Override
     public void delete(Hackathon hackathon) {
         repository.delete(hackathon);
     }

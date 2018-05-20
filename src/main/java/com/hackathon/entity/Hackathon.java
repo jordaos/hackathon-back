@@ -2,11 +2,9 @@ package com.hackathon.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +20,13 @@ public class Hackathon {
     private Date data;
     private int numEquipes;
     private int numParticipantesEquipe;
+    @Column(columnDefinition="tinyint(1) default 0")
+    private boolean encerrado;
 
     public Hackathon() {
     }
 
-    public Hackathon(Integer id, String nome, String descricao, String local, Date data, int numEquipes, int numParticipantesEquipe) {
+    public Hackathon(Integer id, String nome, String descricao, String local, Date data, int numEquipes, int numParticipantesEquipe, boolean encerrado) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -34,6 +34,7 @@ public class Hackathon {
         this.data = data;
         this.numEquipes = numEquipes;
         this.numParticipantesEquipe = numParticipantesEquipe;
+        this.encerrado = encerrado;
     }
 
     public Integer getId() {
@@ -90,6 +91,14 @@ public class Hackathon {
 
     public void setNumParticipantesEquipe(int numParticipantesEquipe) {
         this.numParticipantesEquipe = numParticipantesEquipe;
+    }
+
+    public boolean isEncerrado() {
+        return encerrado;
+    }
+
+    public void setEncerrado(boolean encerrado) {
+        this.encerrado = encerrado;
     }
 
     @Override

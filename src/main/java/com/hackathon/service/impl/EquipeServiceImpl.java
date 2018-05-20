@@ -41,9 +41,7 @@ public class EquipeServiceImpl implements EquipeService{
         Hackathon hackathon = hackathonService.find(equipe.getHackathon().getId());
         for (Participante participante: equipe.getParticipantes()) {
             if(participante.getId() == null) {
-                Participante aux = participanteService.save(participante);
-                equipe.getParticipantes().remove(participante);
-                equipe.getParticipantes().add(aux);
+                participanteService.save(participante);
             } else if(estaNaHackathon(participante, findByHackathon(hackathon))) {
                 throw new Exception("Participante já está em uma equipe nessa hackathon.");
             }

@@ -8,4 +8,5 @@ public interface ParticipanteService {
     List<Participante> getAll();
     Participante save(Participante participante);
     Participante findByNomeOrEmail(String nome, String email);
+    Participante find(int id);
 }

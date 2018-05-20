@@ -60,6 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/hackathon/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/participante/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/equipe/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/equipe/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
@@ -83,7 +87,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Component
     public class UsuarioDetailsService implements UserDetailsService {
         @Autowired
-        //private ResponsibleRepository repository;
         private ParticipanteRepository repository;
         @Override
         public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -112,7 +115,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             String token = request.getHeader(HEADER_STRING);
             if (token != null) {
-                // parse the token.
                 String user = null;
                 try {
                     user = Jwts.parser()
@@ -122,14 +124,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             .getSubject();
                 }catch (Exception e) {
                 }
-                /*
-                Usuario aux = service.getByEmail(user);
-                if(aux!=null) {
-                	System.err.println("Usuario : "+aux.getEmail()+"\n"+aux.getAuthorities());
-                }else {
-                	System.err.println("vazio");
-                }
-                */
                 if(user!= null)
                     return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList() /*aux.getAuthorities()*/);
                 return null;

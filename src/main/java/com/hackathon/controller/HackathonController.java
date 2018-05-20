@@ -48,9 +48,15 @@ public class HackathonController {
     }
 
     @GetMapping("/{id}/equipes")
-    public ResponseEntity getEquipes(@PathVariable("id") int id){
+    public ResponseEntity get(@PathVariable("id") int id){
         Hackathon hackathon = hackathonService.find(id);
         List<Equipe> equipes = equipeService.findByHackathon(hackathon);
         return new ResponseEntity<>(equipes, null, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/encerrar")
+    public ResponseEntity encerrar(@PathVariable("id") int id){
+        Hackathon hackathon = hackathonService.find(id);
+        return new ResponseEntity<>(hackathonService.encerrar(hackathon), null, HttpStatus.OK);
     }
 }
