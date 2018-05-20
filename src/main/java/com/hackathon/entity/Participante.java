@@ -1,23 +1,32 @@
 package com.hackathon.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class Participante {
+public class Participante implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
     private String nome;
+    @NotNull
     private String email;
+    @NotNull
+    private String password;
     private String foto;
     private String telefone;
     private String tamCamisa;
+
 
     public Participante() {
     }
@@ -26,6 +35,16 @@ public class Participante {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.foto = foto;
+        this.telefone = telefone;
+        this.tamCamisa = tamCamisa;
+    }
+
+    public Participante(Integer id, String nome, @NotNull String email, @NotNull String password, String foto, String telefone, String tamCamisa) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.password = password;
         this.foto = foto;
         this.telefone = telefone;
         this.tamCamisa = tamCamisa;
@@ -79,6 +98,10 @@ public class Participante {
         this.tamCamisa = tamCamisa;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Participante{" +
@@ -89,6 +112,41 @@ public class Participante {
                 ", telefone='" + telefone + '\'' +
                 ", tamCamisa='" + tamCamisa + '\'' +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 
