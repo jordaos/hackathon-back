@@ -25,10 +25,9 @@ public class EquipeController {
     @Autowired
     private ParticipanteService participanteService;
 
-    @RequestMapping(value={"/", ""}, method = RequestMethod.GET)
-    public @ResponseBody
-    List<Equipe> index() {
-        return equipeService.getAll();
+    @GetMapping({"/", ""})
+    public ResponseEntity index() {
+        return new ResponseEntity<>(equipeService.getAll(), null, HttpStatus.OK);
     }
 
     @RequestMapping(value="/", method = RequestMethod.POST, consumes= MediaType.APPLICATION_JSON_UTF8_VALUE,produces= MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -45,6 +44,12 @@ public class EquipeController {
     public ResponseEntity find(@PathVariable("id") int id){
         Equipe equipe = equipeService.find(id);
         return new ResponseEntity<>(equipe, null, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/participantes")
+    public ResponseEntity getParticipantes(@PathVariable("id") int id){
+        Equipe equipe = equipeService.find(id);
+        return new ResponseEntity<>(equipe.getParticipantes(), null, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/cancelar")

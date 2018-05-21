@@ -27,8 +27,8 @@ public class ParticipanteController {
     private EquipeService equipeService;
 
     @GetMapping({"/", ""})
-    public @ResponseBody List<Participante> index() {
-        return participanteService.getAll();
+    public ResponseEntity index() {
+        return new ResponseEntity<>(participanteService.getAll(), null, HttpStatus.OK);
     }
 
     @RequestMapping(value="/", method = RequestMethod.POST, consumes= MediaType.APPLICATION_JSON_UTF8_VALUE,produces= MediaType.APPLICATION_JSON_UTF8_VALUE)

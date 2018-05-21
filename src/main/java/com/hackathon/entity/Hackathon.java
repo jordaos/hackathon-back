@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -13,12 +14,18 @@ public class Hackathon {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotNull
     private String nome;
+    @NotNull
     private String descricao;
+    @NotNull
     private String local;
+    @NotNull
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date data;
+    @NotNull
     private int numEquipes;
+    @NotNull
     private int numParticipantesEquipe;
     @Column(columnDefinition="tinyint(1) default 0")
     private boolean encerrado;

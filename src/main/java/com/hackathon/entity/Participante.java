@@ -18,13 +18,16 @@ public class Participante implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
+    @NotNull
     private String nome;
     @NotNull
     private String email;
     @NotNull
     private String password;
     private String foto;
+    @NotNull
     private String telefone;
+    @NotNull
     private String tamCamisa;
 
 
