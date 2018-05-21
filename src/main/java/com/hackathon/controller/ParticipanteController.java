@@ -26,29 +26,51 @@ public class ParticipanteController {
     @Autowired
     private EquipeService equipeService;
 
-    @GetMapping("/")
+    @GetMapping({"/", ""})
     public @ResponseBody List<Participante> index() {
         return participanteService.getAll();
     }
 
     @RequestMapping(value="/", method = RequestMethod.POST, consumes= MediaType.APPLICATION_JSON_UTF8_VALUE,produces= MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity save(@RequestBody Participante participante){
-        if(participanteService.findByNomeOrEmail(participante.getNome(), participante.getEmail()) != null) {
+        try {
             return new ResponseEntity<>(participanteService.save(participante), null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity getCurrentUser(Authentication auth) {
+        String email = auth.getPrincipal().toString();
+        Participante participante = participanteService.findByEmail(email);
+        return new ResponseEntity<>(participante, null, HttpStatus.OK);
     }
 
     @GetMapping("/hackathons")
-    public ResponseEntity get(Authentication auth){
-        Participante participante = (Participante) auth.getPrincipal();
+    public ResponseEntity getHackathons(Authentication auth){
+        String email = auth.getPrincipal().toString();
+        Participante participante = participanteService.findByEmail(email);
         List<Equipe> equipes = equipeService.getAll();
         List<Hackathon> hackathons = new ArrayList<Hackathon>();
-        for (Equipe e: equipes) {
-            if(e.getParticipantes().contains(participante))
+        for (Equipe e : equipes) {
+            if (e.getParticipantes().contains(participante))
                 hackathons.add(e.getHackathon());
         }
         return new ResponseEntity<>(hackathons, null, HttpStatus.OK);
+    }
+
+    @GetMapping("/equipes")
+    public ResponseEntity getEquipes(Authentication auth){
+        String email = auth.getPrincipal().toString();
+        Participante participante = participanteService.findByEmail(email);
+        List<Equipe> equipes = equipeService.getAll();
+        List<Equipe> desseParticipante = new ArrayList<Equipe>();
+        for (Equipe e : equipes) {
+            if (e.getParticipantes().contains(participante))
+                desseParticipante.add(e);
+        }
+        return new ResponseEntity<>(desseParticipante, null, HttpStatus.OK);
     }
 
 

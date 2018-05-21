@@ -11,4 +11,5 @@ public interface EquipeService {
     List<Equipe> findByHackathon(Hackathon hackathon);
     Equipe save(Equipe equipe) throws Exception;
     Equipe find(int id);
+    void cancelSubscription(Equipe equipe, Participante participante) throws Exception;
 }

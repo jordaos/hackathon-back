@@ -1,5 +1,6 @@
 package com.hackathon.service.impl;
 
+import com.hackathon.entity.Equipe;
 import com.hackathon.entity.Hackathon;
 import com.hackathon.repository.HackathonRepository;
 import com.hackathon.service.HackathonService;

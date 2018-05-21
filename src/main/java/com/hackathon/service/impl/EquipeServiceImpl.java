@@ -12,6 +12,8 @@ import com.hackathon.service.ParticipanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,23 +41,33 @@ public class EquipeServiceImpl implements EquipeService{
     @Override
     public Equipe save(Equipe equipe) throws Exception{
         Hackathon hackathon = hackathonService.find(equipe.getHackathon().getId());
+        List<Participante> toSave = new ArrayList<Participante>();
         for (Participante participante: equipe.getParticipantes()) {
-            if(participante.getId() == null) {
-                participanteService.save(participante);
+            int occurrences = Collections.frequency(equipe.getParticipantes(), participante);
+            if (occurrences > 1) {
+                throw new Exception("Não é permitido cadastrar o mesmo participante mais de uma vez na mesma equipe.");
+            } if(participante.getId() == null) {
+                toSave.add(participante);
             } else if(estaNaHackathon(participante, findByHackathon(hackathon))) {
-                throw new Exception("Participante já está em uma equipe nessa hackathon.");
+                throw new Exception("Um dos participantes já está em uma equipe nessa hackathon.");
             }
         }
+
+        for (Participante p : toSave) {
+            equipe.getParticipantes().remove(p);
+            participanteService.save(p);
+        }
+
+        System.out.println(equipe.toString());
+
+        equipe.setParticipando(true);
         return repository.save(equipe);
     }
 
     private boolean estaNaHackathon(Participante participante, List<Equipe> equipes) {
-        System.out.println("------------------");
         for (Equipe equipe: equipes) {
             for (Participante p: equipe.getParticipantes()) {
-                System.out.println(p.toString());
-                System.out.println(participante.toString());
-                if(p.getId() == participante.getId()) {
+                if(p.getId() == participante.getId() && equipe.isParticipando()) {
                     return true;
                 }
             }
@@ -66,5 +78,15 @@ public class EquipeServiceImpl implements EquipeService{
     @Override
     public Equipe find(int id) {
         return repository.findById(id).get();
+    }
+
+    @Override
+    public void cancelSubscription(Equipe equipe, Participante participante) throws Exception {
+        if(equipe.getParticipantes().contains(participante) && equipe.isParticipando()) {
+            equipe.setParticipando(false);
+            repository.save(equipe);
+            return;
+        }
+        throw new Exception("Você não tem permissões para cancelar a inscrição.");
     }
 }

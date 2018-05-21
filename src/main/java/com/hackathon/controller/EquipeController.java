@@ -1,11 +1,14 @@
 package com.hackathon.controller;
 
 import com.hackathon.entity.Equipe;
+import com.hackathon.entity.Participante;
 import com.hackathon.service.EquipeService;
+import com.hackathon.service.ParticipanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,10 @@ public class EquipeController {
     @Autowired
     private EquipeService equipeService;
 
-    @GetMapping("/")
+    @Autowired
+    private ParticipanteService participanteService;
+
+    @RequestMapping(value={"/", ""}, method = RequestMethod.GET)
     public @ResponseBody
     List<Equipe> index() {
         return equipeService.getAll();
@@ -39,5 +45,22 @@ public class EquipeController {
     public ResponseEntity find(@PathVariable("id") int id){
         Equipe equipe = equipeService.find(id);
         return new ResponseEntity<>(equipe, null, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/cancelar")
+    public ResponseEntity cancelInscricao(
+            @PathVariable("id") int id,
+            Authentication auth
+    ){
+        try {
+            String email = auth.getPrincipal().toString();
+            Participante participante = participanteService.findByEmail(email);
+            Equipe equipe = equipeService.find(id);
+            equipeService.cancelSubscription(equipe, participante);
+            return new ResponseEntity<>(equipe, null, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), null, HttpStatus.CONFLICT);
+        }
     }
 }

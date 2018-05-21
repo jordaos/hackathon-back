@@ -111,6 +111,7 @@ public class Hackathon {
                 ", data=" + data +
                 ", numEquipes=" + numEquipes +
                 ", numParticipantesEquipe=" + numParticipantesEquipe +
+                ", encerrado=" + encerrado +
                 '}';
     }
 }

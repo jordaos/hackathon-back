@@ -1,6 +1,9 @@
 package com.hackathon.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -10,20 +13,29 @@ public class Equipe {
     private Integer id;
     private String nome;
 
+    @ManyToMany
+    private List<Participante> participantes;
+
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private Date data;
+
     @ManyToOne
     private Hackathon hackathon;
 
-    @OneToMany
-    private List<Participante> participantes;
+    @Column(columnDefinition="tinyint(1) default 1")
+    private boolean participando;
 
     public Equipe() {
     }
 
-    public Equipe(Integer id, String nome, Hackathon hackathon, List<Participante> participantes) {
+    public Equipe(Integer id, String nome, List<Participante> participantes, Date data, Hackathon hackathon, boolean participando) {
         this.id = id;
         this.nome = nome;
-        this.hackathon = hackathon;
         this.participantes = participantes;
+        this.data = data;
+        this.hackathon = hackathon;
+        this.participando = participando;
     }
 
     public Integer getId() {
@@ -42,6 +54,30 @@ public class Equipe {
         this.nome = nome;
     }
 
+    public List<Participante> getParticipantes() {
+        return participantes;
+    }
+
+    public void setParticipantes(List<Participante> participantes) {
+        this.participantes = participantes;
+    }
+
+    public boolean isParticipando() {
+        return participando;
+    }
+
+    public void setParticipando(boolean participando) {
+        this.participando = participando;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
     public Hackathon getHackathon() {
         return hackathon;
     }
@@ -50,11 +86,14 @@ public class Equipe {
         this.hackathon = hackathon;
     }
 
-    public List<Participante> getParticipantes() {
-        return participantes;
-    }
-
-    public void setParticipantes(List<Participante> participantes) {
-        this.participantes = participantes;
+    @Override
+    public String toString() {
+        return "Equipe{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", participantes=" + participantes +
+                ", data=" + data +
+                ", participando=" + participando +
+                '}';
     }
 }

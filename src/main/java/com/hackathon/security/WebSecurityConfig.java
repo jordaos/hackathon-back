@@ -60,10 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/hackathon/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/participante/*").permitAll()
-                .antMatchers(HttpMethod.GET, "/equipe/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/equipe/").permitAll()
+                .antMatchers(HttpMethod.GET, "/hackathon/").permitAll()
+                .antMatchers(HttpMethod.POST, "/participante/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
